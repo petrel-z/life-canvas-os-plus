@@ -1,0 +1,8 @@
+packages:
+  - apps/*
+  - packages/*
+
+engineStrict: true
+nodeLinker: isolated
+saveExact: true
+storeDir: .tools/pnpm-store

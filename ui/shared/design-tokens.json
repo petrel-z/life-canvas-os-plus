@@ -1,0 +1,132 @@
+{
+  "name": "Life Canvas / Everyday Editorial",
+  "version": "3.3.0",
+  "canvas": {
+    "width": 393,
+    "height": 852,
+    "exportScale": 2
+  },
+  "colors": {
+    "light": {
+      "background": "#F7F6F2",
+      "surface": "#FFFEFA",
+      "text": "#283C33",
+      "textSecondary": "#626B5D",
+      "border": "#E5E6DD",
+      "primary": "#284F40",
+      "primaryTint": "#E9EEE4",
+      "warning": "#8E5D21",
+      "warningTint": "#F5EAD9",
+      "destructive": "#B3433B",
+      "destructiveTint": "#FFF0EE",
+      "paper": "#EFE8DA",
+      "apricot": "#E6B99B",
+      "onPrimary": "#FFFDF4"
+    },
+    "dark": {
+      "background": "#151F1B",
+      "surface": "#202E26",
+      "text": "#EDF3E9",
+      "textSecondary": "#ACB7A8",
+      "border": "#354338",
+      "primary": "#BFD2AC",
+      "primaryTint": "#2D3D30",
+      "warning": "#E4BC79",
+      "warningTint": "#3B3020",
+      "destructive": "#F1A49A",
+      "destructiveTint": "#422B29",
+      "paper": "#32362B",
+      "apricot": "#D9B395",
+      "onPrimary": "#203626"
+    }
+  },
+  "typography": {
+    "family": "System / SF Pro / PingFang SC",
+    "pageTitle": 32,
+    "sectionTitle": 20,
+    "navigationTitle": 17,
+    "body": 15,
+    "secondary": 13,
+    "caption": 12,
+    "editorialFamily": "Songti SC / STSong / serif",
+    "numeralFamily": "Baskerville / Iowan Old Style / Times New Roman",
+    "dateNumeral": 52
+  },
+  "spacing": {
+    "page": 20,
+    "smallScreenPage": 16,
+    "card": 16,
+    "section": 24,
+    "gap": 12,
+    "compactGap": 8
+  },
+  "radii": {
+    "card": 22,
+    "control": 14,
+    "sheet": 28,
+    "badge": 6
+  },
+  "controls": {
+    "primaryHeight": 48,
+    "minimumTouchSize": 44,
+    "tabBarHeightIncludingHomeIndicator": 83
+  },
+  "motion": {
+    "pressMs": 120,
+    "pageMs": 160,
+    "sheetMs": 240,
+    "toastHoldMs": 3000,
+    "undoHoldMs": 8000,
+    "easing": [
+      0.2,
+      0.75,
+      0.3,
+      1
+    ],
+    "pressScale": 0.985,
+    "pageTranslateY": 0,
+    "sheetTranslateY": 24,
+    "respectSystemReducedMotion": true
+  },
+  "rules": {
+    "onePrimaryActionPerRegion": true,
+    "savePlacement": "bottom-right",
+    "secondaryFields": "progressive-disclosure",
+    "destructiveRecordActions": "confirmation-and-undo",
+    "unsavedChanges": "explicit-leave-prompt",
+    "brand": "Editorial type, paper surfaces, calm forest-green emphasis",
+    "journal": {
+      "layout": "fullscreen borderless writing",
+      "save": "automatic local prototype persistence",
+      "autosaveDebounceMs": 650,
+      "settings": "top-right dropdown",
+      "toolbar": [
+        "heading",
+        "bold",
+        "italic",
+        "unordered-list",
+        "ordered-list",
+        "quote",
+        "undo"
+      ],
+      "focusBorder": false,
+      "separatePreview": false,
+      "tags": "individual chips with add and remove",
+      "listPrivacy": "icon-only with accessible label"
+    },
+    "calendar": {
+      "navigation": [
+        "previous-month",
+        "next-month",
+        "year-select",
+        "month-select"
+      ],
+      "yearRange": [
+        1900,
+        2100
+      ],
+      "commit": "on-day-selection"
+    },
+    "assistant": "new-conversation welcome with small brand icon and concise copy; hidden after sending or opening a conversation"
+  }
+}

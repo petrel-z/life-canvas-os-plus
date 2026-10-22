@@ -1,0 +1,56 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+.secrets/
+secrets/
+*.key
+*.pem
+*.p8
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.mobileprovision
+credentials*.json
+service-account*.json
+
+# JavaScript dependencies and generated output
+node_modules/
+.pnpm-store/
+dist/
+build/
+coverage/
+.expo/
+.vite/
+.turbo/
+*.tsbuildinfo
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Test reports and local tooling
+playwright-report/
+test-results/
+/.tools/
+/.superpowers/
+/.worktrees/
+*.log
+
+# Local editor / OS metadata
+.idea/
+.DS_Store
+Thumbs.db
+
+# Keep lockfiles, generated API types and ui/** deliverables tracked.

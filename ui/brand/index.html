@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eeeee7">
+  <title>一日里 · 产品命名与图标</title>
+  <link rel="icon" href="yirili/app-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/brand.css">
+</head>
+<body>
+  <header class="header"><a href="../mobile/index.html">← 返回手机原型</a><span>产品命名与图标 <i>01 / 2026.10</i></span><a href="exports/brand-assets.zip" download>下载整套素材 ↗</a></header>
+  <main>
+    <div class="intro"><p>NAME & IDENTITY</p><h1>给日常，一个名字。</h1><span>三餐、日记，与值得留下的小事。</span></div>
+    <nav class="concepts" aria-label="选择命名方案" id="concepts"></nav>
+    <section class="brand-stage" aria-label="当前品牌方案">
+      <div class="story"><span id="concept-tag" class="concept-tag"></span><h2 id="brand-name"></h2><div class="pronunciation"><span id="roman"></span><span id="pronunciation"></span></div><h3 id="tagline"></h3><p id="meaning"></p><div class="story-foot"><span id="concept-number"></span><span id="symbol-title"></span></div></div>
+      <div class="identity"><img id="hero-icon" class="app-icon" width="230" height="230" alt=""><div class="variants" aria-label="图标配色"><button data-variant="default" aria-pressed="true">主色</button><button data-variant="paper" aria-pressed="false">纸白</button><button data-variant="dark" aria-pressed="false">深色</button></div><p>少一点装饰，多一点记得住的形状。</p></div>
+    </section>
+    <section class="application">
+      <div class="application-copy"><p class="eyebrow">IN EVERYDAY USE</p><h2>放进日常，<br>也认得出来。</h2><p id="symbol-description"></p><div class="context-tabs" aria-label="界面预览"><button data-screen="home" aria-pressed="true">饮食首页</button><button data-screen="assistant" aria-pressed="false">新对话</button></div><p class="fit" id="fit"></p></div>
+      <div class="phone"><img id="context-preview" width="393" height="852" alt="品牌在手机界面中的应用"></div>
+      <div class="details">
+        <div class="scale-panel"><p class="eyebrow">小尺寸识别</p><div class="scales"><figure><img data-size="64" width="64" height="64" alt="64 像素图标"><figcaption>64 px</figcaption></figure><figure><img data-size="40" width="40" height="40" alt="40 像素图标"><figcaption>40 px</figcaption></figure><figure><img data-size="24" width="24" height="24" alt="24 像素图标"><figcaption>24 px</figcaption></figure></div></div>
+        <div class="mono-panel"><p class="eyebrow">单色与反白</p><div class="mono-pair"><div><img id="mono" width="80" height="80" alt="单色标记"></div><div><img id="reverse" width="80" height="80" alt="反白标记"></div></div></div>
+        <div class="palette-panel"><p class="eyebrow">品牌配色</p><div id="palette" class="palette"></div></div>
+      </div>
+    </section>
+    <section class="downloads"><div><h2>从名字到图标，成套交付。</h2><p>可编辑 SVG · 1024 px 方形图标 · 透明标记 · 手机场景图</p></div><div><a id="download-svg" download>SVG 源文件 ↗</a><a id="download-png" download>PNG 图标 ↗</a><a href="README.md">设计说明 ↗</a></div></section>
+    <footer><span>首选：一日里 / YIRILI</span><span>产品品牌设计提案 · 2026.10</span></footer>
+  </main>
+  <script src="scripts/concepts.js"></script>
+  <script src="scripts/brand.js"></script>
+</body>
+</html>

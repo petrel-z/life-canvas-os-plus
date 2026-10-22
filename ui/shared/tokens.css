@@ -1,0 +1,23 @@
+/* Shared semantic tokens: mobile screens and the component catalogue. */
+:root {
+  --bg:#f7f6f2; --card:#fffefa; --ink:#283c33; --muted:#626b5d;
+  --line:#e5e6dd; --green:#284f40; --green-dark:#1c382e; --sage:#e9eee4;
+  --peach:#f5ead9; --orange:#8e5d21; --lavender:#eeeaf1; --purple:#776581;
+  --paper:#efe8da; --apricot:#e6b99b; --on-primary:#fffdf4;
+  --serif:"Iowan Old Style","Baskerville","Songti SC","STSong",serif;
+  --numeral:"Baskerville","Iowan Old Style","Times New Roman",serif;
+  --red:#b3433b; --danger-bg:#fff0ee;
+  --radius-sm:8px; --radius-control:14px; --radius-card:22px; --radius-sheet:28px;
+  --space-page:20px; --space-card:16px; --touch:44px;
+  --duration-press:120ms; --duration-page:160ms; --duration-sheet:240ms;
+  --ease:cubic-bezier(.2,.75,.3,1); --shadow:0 4px 20px #172e2208;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;
+  font-synthesis:none; color:var(--ink); background:#eaece4;
+}
+.dark-mode {
+  --bg:#151f1b; --card:#202e26; --ink:#edf3e9; --muted:#acb7a8;
+  --line:#354338; --green:#bfd2ac; --green-dark:#d4e5c3; --sage:#2d3d30;
+  --paper:#32362b; --apricot:#d9b395; --on-primary:#203626;
+  --peach:#3b3020; --orange:#e4bc79; --lavender:#342e3c; --purple:#c0aed1;
+  --red:#f1a49a; --danger-bg:#422b29;
+}

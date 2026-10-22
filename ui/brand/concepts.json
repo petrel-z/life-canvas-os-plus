@@ -1,0 +1,53 @@
+[
+  {
+    "id": "yirili",
+    "name": "一日里",
+    "roman": "YIRILI",
+    "pronunciation": "yī rì lǐ",
+    "tag": "首选 · 温暖日常",
+    "tagline": "把日常，一点点收好。",
+    "meaning": "一日三餐，一页心情，都放在一日里。三个常用字，容易读、容易记，也为以后的生活记录留出空间。",
+    "symbol": "一页日光",
+    "description": "把「日」字变成一页圆润的记录。中间的一横承接一天的片段，杏色圆点像落在纸上的日光。",
+    "fit": "覆盖饮食、日记与生活助手，适合长期使用的个人生活品牌。",
+    "color": "#284F40",
+    "paper": "#FFFDF4",
+    "accent": "#E6B99B",
+    "motif": "day",
+    "recommend": true
+  },
+  {
+    "id": "changye",
+    "name": "常页",
+    "roman": "CHANGYE",
+    "pronunciation": "cháng yè",
+    "tag": "备选 · 书写气质",
+    "tagline": "平常的一天，也值得一页。",
+    "meaning": "把「日常」与「书页」连起来。更像一本安静的生活手帐，适合突出记录与回看的产品气质。",
+    "symbol": "翻开的日常",
+    "description": "两片错位的书页围出一道留白。没有细碎笔画，收成一个简单的书形，保留轻柔的翻页感。",
+    "fit": "书写感更强；饮食功能需要副标题帮助说明。",
+    "color": "#E9E7DB",
+    "paper": "#395447",
+    "accent": "#9AA98A",
+    "motif": "pages",
+    "recommend": false
+  },
+  {
+    "id": "riyu",
+    "name": "日隅",
+    "roman": "RIYU",
+    "pronunciation": "rì yú",
+    "tag": "备选 · 安静陪伴",
+    "tagline": "留一隅，安放日常。",
+    "meaning": "给日常留一个属于自己的角落。更强调私密、陪伴与留白；「隅」读 yú，首次见面需要一点解释。",
+    "symbol": "角落里的光",
+    "description": "开放的圆角轮廓围起一个小空间，右上方是一点日光。图形留出开口，让记录有安静、自在的感觉。",
+    "fit": "更有文艺气质；识读成本略高于另外两个名字。",
+    "color": "#DCE5D8",
+    "paper": "#345344",
+    "accent": "#B97655",
+    "motif": "corner",
+    "recommend": false
+  }
+]

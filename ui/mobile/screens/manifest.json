@@ -1,0 +1,149 @@
+[
+  {
+    "id": "home",
+    "title": "饮食 · 今天",
+    "file": "home.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "meal",
+    "title": "记录 · 一餐",
+    "file": "meal.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "confirmation",
+    "title": "AI · 写入确认",
+    "file": "confirmation.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "journals",
+    "title": "日记 · 生活片段",
+    "file": "journals.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "assistant",
+    "title": "AI · 生活助手",
+    "file": "assistant.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "profile",
+    "title": "我的 · 个人空间",
+    "file": "profile.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "login",
+    "title": "欢迎 · 从一餐开始",
+    "file": "login.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "food",
+    "title": "食物 · 底部弹层",
+    "file": "food.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "calendar",
+    "title": "日期 · 年月选择",
+    "file": "calendar.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "history",
+    "title": "饮食 · 历史记录",
+    "file": "history.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "journal",
+    "title": "日记 · 写下今天",
+    "file": "journal.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "journal-new",
+    "title": "日记 · 全屏书写",
+    "file": "journal-new.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "journal-options",
+    "title": "日记 · 设置下拉",
+    "file": "journal-options.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "devices",
+    "title": "账号 · 登录设备",
+    "file": "devices.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "data",
+    "title": "数据 · 随身带走",
+    "file": "data.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "appearance",
+    "title": "外观 · 舒适优先",
+    "file": "appearance.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "memories",
+    "title": "AI · 记住的偏好",
+    "file": "memories.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "offline",
+    "title": "状态 · 暂时离线",
+    "file": "offline.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "conflict",
+    "title": "状态 · 编辑冲突",
+    "file": "conflict.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "dark",
+    "title": "深色 · 晚间的光",
+    "file": "dark.png",
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "id": "data-ready",
+    "title": "导出 · 已准备好",
+    "file": "data-ready.png",
+    "width": 786,
+    "height": 1704
+  }
+]

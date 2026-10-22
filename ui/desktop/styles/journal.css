@@ -1,0 +1,74 @@
+/* Desktop diary: independent list, writing surface, and calendar above properties. */
+.journal-workspace{grid-template-columns:238px minmax(0,1fr) 280px;grid-template-rows:minmax(0,1fr);background:var(--card)}
+.journal-editor{min-width:0;min-height:0;overflow:hidden;background:var(--card)}
+.editor-top{padding:19px 32px;min-height:72px}
+.editor-top .row{gap:12px}.editor-top .icon-button{width:32px;min-height:32px}
+.editor-scroll{padding:15px 32px 48px;scrollbar-gutter:stable}
+.writing-paper{max-width:900px;margin:0}
+.journal-meta{margin-bottom:19px;gap:9px;font-size:11px}
+.journal-title{font-size:34px;margin-bottom:15px;line-height:1.45}
+.editor-toolbar{min-height:46px;padding:0 0 10px;gap:10px;border-top:0;border-bottom:1px solid var(--line);margin-bottom:25px;background:transparent}
+.format-buttons{gap:2px;flex-wrap:wrap}.format-buttons button{width:32px;min-height:32px}
+.format-buttons .format-separator{margin:0 6px}.format-buttons .icon{width:16px;height:16px}
+.editor-toolbar .markdown-hint{font-size:10px;white-space:nowrap;color:var(--muted);display:flex;align-items:center;gap:5px}
+.editor-toolbar .markdown-hint .icon{width:13px;height:13px}
+.editor-modes{display:flex;gap:2px;background:var(--bg);border:1px solid var(--line);padding:3px;border-radius:9px}
+.editor-modes button{font-size:10px;border-radius:6px;min-height:27px;padding:4px 10px;color:var(--muted)}
+.editor-modes button.active{background:var(--card);color:var(--ink);box-shadow:0 1px 4px #18281c0a}
+.journal-body{font-size:15px;line-height:2;letter-spacing:.015em;white-space:normal;min-height:400px;overflow-wrap:anywhere}
+.journal-body p,.journal-body div{margin:0 0 20px}.journal-body h1{font:600 29px/1.6 var(--serif);margin:25px 0 14px}.journal-body h2{font:600 25px/1.6 var(--serif);margin:25px 0 14px}.journal-body h3{font:600 21px/1.7 var(--serif);margin:22px 0 12px}.journal-body h4,.journal-body h5,.journal-body h6{margin:18px 0 10px;font-size:16px}.journal-body ul,.journal-body ol{padding-left:22px;margin:12px 0 22px}.journal-body li{padding-left:3px}.journal-body li p{margin-bottom:5px}.journal-body blockquote{border-left:2px solid var(--apricot);margin:20px 0;padding:0 18px;color:var(--muted)}.journal-body blockquote p{margin-bottom:8px}.journal-body a{color:var(--green);text-decoration:underline;text-underline-offset:3px}.journal-body code{font:12px/1.8 ui-monospace,"SFMono-Regular",Menlo,monospace;background:var(--sage);padding:2px 5px;border-radius:4px}.journal-body pre{padding:17px 20px;background:var(--bg);border:1px solid var(--line);border-radius:10px;overflow:auto;margin:20px 0}.journal-body pre code{background:none;padding:0;white-space:pre;font-size:12px}.journal-body table{border-collapse:collapse;font-size:12px;margin:22px 0;width:100%;table-layout:fixed}.journal-body th,.journal-body td{border:1px solid var(--line);padding:9px 12px;text-align:left;overflow-wrap:anywhere}.journal-body th{background:var(--sage);font-weight:500}.journal-body hr{border:0;border-top:1px solid var(--line);margin:26px 0}.journal-body input[type=checkbox]{accent-color:var(--green);width:14px;height:14px;margin:0 6px 0 0;vertical-align:middle;outline-offset:3px}.journal-body [contenteditable=false]{cursor:default}
+.journal-markdown{width:100%;display:block;resize:none;border:none;border-radius:0;outline:none!important;padding:0;background:none;font:14px/2.05 ui-monospace,"SFMono-Regular",Menlo,"PingFang SC",monospace;min-height:440px;overflow:hidden;tab-size:2;letter-spacing:.01em;color:var(--ink)}
+.journal-markdown[hidden],.journal-body[hidden]{display:none}
+.editor-statusbar{display:flex;justify-content:space-between;align-items:center;min-height:41px;border-top:1px solid var(--line);padding:8px 32px;font-size:10px;color:var(--muted);gap:15px}
+.editor-statusbar span{display:flex;align-items:center;gap:7px}.editor-statusbar .icon{width:12px;height:12px}
+.journal-rail{border-left:1px solid var(--line);background:var(--bg);overflow:auto;min-height:0;padding:0;scrollbar-width:thin}
+.journal-list{border-right:1px solid var(--line);background:var(--bg);overflow:hidden;min-width:0;min-height:0}
+.journal-list-head{padding:24px 18px 12px;flex-shrink:0}
+.journal-list-head h1{font:600 21px/1.4 var(--serif);white-space:nowrap}
+.journal-list-head .count{font:15px var(--numeral);margin-left:5px}
+.journal-list-head>.row{margin-bottom:19px;gap:6px}
+.journal-list-head .icon-button{width:30px;min-height:30px;flex-shrink:0}
+.journal-list-head .icon-button .icon{width:17px;height:17px}
+.journal-list-head .search-field input{padding:9px 0;font-size:11px}
+.journal-list-head .search-field{border-radius:9px;background:var(--card);padding:0 10px;gap:8px}
+.journal-filter{margin-top:12px}
+.journal-filter .icon-button{min-height:24px;height:24px;width:25px}
+.journal-items{padding:0 10px 18px;min-height:0;overflow:auto;flex:1;scrollbar-width:thin}
+.journal-item{padding:16px 13px;border-radius:11px;margin-bottom:6px}
+.journal-item .item-date{font-size:9px;margin-bottom:9px}
+.journal-item h3{font:600 16px/1.6 var(--serif);margin-bottom:6px}
+.journal-item p{font-size:10px;line-height:1.9;-webkit-line-clamp:2}
+.journal-item footer{font-size:9px;margin-top:12px;gap:5px}
+.journal-item .item-date .icon{width:11px;height:11px}
+.journal-calendar{padding:20px 16px;border-bottom:1px solid var(--line)}
+.journal-calendar .calendar-panel{padding:17px 12px 12px;border-radius:17px}
+.journal-calendar .calendar-head{gap:1px;margin-bottom:12px}
+.journal-calendar .calendar-head select{font-size:12px}
+.journal-calendar .calendar-head .icon-button{width:25px;min-height:28px}
+.journal-calendar .calendar-grid{gap:3px 1px}
+.journal-calendar .calendar-day{height:30px}
+.journal-settings{padding:23px 19px 22px;min-height:400px}
+.journal-settings>header{display:flex;align-items:center;justify-content:space-between;margin-bottom:23px}
+.journal-settings>header h2{font-size:13px;font-weight:600}
+.journal-settings>header .icon{width:16px;height:16px;color:var(--muted)}
+.journal-settings .property-date{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;font-size:11px}
+.property-date>span{color:var(--muted)}.property-date button{font-size:11px;min-height:28px;padding:0 2px;color:var(--ink)}.property-date .icon{width:12px;height:12px}
+.journal-settings .moods{margin:8px 0 22px;gap:3px}.journal-settings .moods button{padding:9px 1px;font-size:9px;gap:6px;border-radius:8px}.journal-settings .moods .icon{width:18px;height:18px}
+.journal-settings .tag-chips{gap:6px;margin:10px 0 8px;min-height:0}.journal-settings .tag-input{gap:5px}.journal-settings .tag-input input{font-size:10px;padding:8px 10px;background:var(--card);border-radius:8px}.journal-settings .tag-input .icon-button{width:32px;min-height:32px;background:var(--sage);border-radius:8px}.journal-settings .tag-input .icon{width:15px;height:15px}
+.journal-settings .error:empty{display:none}.journal-settings .error{margin-top:7px}
+.journal-settings .setting-line{margin-top:23px;padding-top:21px;border-top:1px solid var(--line)}
+.journal-settings .setting-line>div{font-size:11px}.journal-settings .setting-line small{font-size:9px;line-height:1.8;margin-top:5px}
+.journal-settings .setting-actions{display:flex;justify-content:space-between;gap:7px;border-top:1px solid var(--line);margin-top:23px;padding-top:14px}
+.journal-settings .setting-actions .text-button{font-size:10px;padding:5px 2px;min-height:30px;gap:6px}.journal-settings .setting-actions .icon{width:13px;height:13px}
+.markdown-files{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0 3px}.markdown-files .secondary{font-size:10px;min-height:33px;padding:5px 7px;border-radius:8px;gap:5px}.markdown-files .icon{width:13px;height:13px}
+.markdown-file-label{cursor:pointer;display:flex;align-items:center;justify-content:center}
+.rail-helper{font-size:9px;color:var(--muted);line-height:1.9;margin-top:10px}
+.journal-empty-settings{padding:10px 0;font-size:11px;color:var(--muted);line-height:1.9}
+.focus-mode .journal-rail{display:none}.focus-mode .journal-workspace{grid-template-columns:1fr}.focus-mode .editor-top{padding:19px 32px}.focus-mode .editor-scroll{padding:25px 32px 50px}.focus-mode .writing-paper{max-width:900px;margin:0 auto}.focus-mode .editor-toolbar{padding:0 0 10px}.focus-mode .editor-statusbar{padding:8px 32px}.focus-mode .journal-title{font-size:36px}
+@media(min-width:1700px){.journal-workspace{grid-template-columns:270px minmax(0,1fr) 300px}.journal-list-head{padding-left:22px;padding-right:22px}.journal-settings{padding-left:23px;padding-right:23px}.journal-calendar{padding:22px 20px}.journal-calendar .calendar-day{height:33px}.writing-paper{max-width:1000px}}
+@media(max-width:1300px){.editor-toolbar .markdown-hint{display:none}}
+@media(max-width:1200px){.journal-workspace{grid-template-columns:220px minmax(0,1fr) 250px}.editor-top{padding:17px 26px}.editor-scroll{padding:15px 26px 40px}.journal-list-head{padding:22px 15px 12px}.journal-settings{padding:20px 16px}.journal-calendar{padding:18px 12px}.journal-title{font-size:31px}.editor-statusbar{padding:8px 26px}.editor-modes button{padding:4px 7px}.editor-top .row{gap:7px}.editor-top .text-button{padding:4px 0;gap:5px}}
+@media(max-width:1050px){.journal-workspace{grid-template-columns:200px minmax(0,1fr) 244px}.journal-list-head h1{font-size:19px}.journal-list-head .count{font-size:13px;margin-left:2px}.journal-list-head{padding-left:13px;padding-right:13px}.journal-item{padding:14px 11px}.journal-item h3{font-size:15px}.writing-paper{max-width:none}.focus-mode .writing-paper{max-width:780px}}
+@media(max-width:800px){.journal-workspace{grid-template-columns:170px minmax(0,1fr) 220px}.editor-scroll{padding:12px 20px 35px}.editor-top{padding:15px 20px;flex-wrap:wrap;gap:10px}.editor-top>.row{margin-left:auto}.journal-title{font-size:28px}.format-buttons{gap:0}.format-buttons button{width:27px;min-height:30px}.format-buttons .format-separator{margin:0 3px}.editor-statusbar{padding:8px 20px}.editor-statusbar .word-count{display:inline}.editor-statusbar .status-format{display:none}.journal-settings{padding:20px 13px}.journal-calendar{padding:15px 9px}.journal-body{font-size:14px}.journal-markdown{font-size:12px}.journal-settings .moods{gap:1px}}
+
+.journal-body [data-md-image]{display:inline-flex;align-items:center;border:1px dashed var(--line);border-radius:8px;padding:12px 16px;margin:4px 0;color:var(--muted);background:var(--bg);font-size:12px;max-width:100%;overflow-wrap:anywhere}
