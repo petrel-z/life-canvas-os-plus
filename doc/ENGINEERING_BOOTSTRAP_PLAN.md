@@ -18,6 +18,7 @@
 - Python 使用 3.12，pnpm 使用需求指定的 10.30.3。Node、Expo SDK、React Native 和移动 React 的兼容组合在 S01 核实并记录，后续步骤使用同一记录；Web React 版本单独遵守需求，不能强行覆盖移动依赖。
 - 包名固定为 `@life-canvas/web`、`@life-canvas/mobile`、`@life-canvas/api-client`、`@life-canvas/design-tokens`。`packages/client-core/` 在 T4 出现实际业务逻辑时创建。
 - 安装依赖使用 pnpm/uv，生成并提交各自锁文件。Git 初始化属于 S02；不自动配置远程仓库、推送或部署。
+- 后续步骤直接在本地 `dev` 分支实施，不创建功能分支；分支与提交规则见 [开发规范](../AGENT.md#9-变更与维护)。
 - 业务 API 前缀为 `/api/v1`。基础设施健康接口沿用 `/health/live`、`/health/ready`；普通 JSON 遵循 `code/msg/data/traceId`，状态码、协议例外及错误结构遵循核心契约。
 - 运行配置按使用时校验：T1 后端需要数据库配置，T2 才要求 Auth 配置，M3 才要求模型/Worker 配置。不能要求尚未实现的服务凭据才能启动骨架。
 - 正式 Web 默认使用 5173，API 使用 8000，Metro 使用 8081，本地数据库映射 54322；执行前检查占用，冲突时同步配置和文档。原型的 4173 端口保留。
