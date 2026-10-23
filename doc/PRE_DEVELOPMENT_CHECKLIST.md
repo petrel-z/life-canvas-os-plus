@@ -1,6 +1,6 @@
 # 开发前准备清单
 
-更新：2026-10-22。以 [V1 需求](LIFE_CANVAS_V1_REQUIREMENTS.md) 为准，区分“已整理的设计”和“已验证的正式实现”。
+更新：2026-10-23。以 [V1 需求](LIFE_CANVAS_V1_REQUIREMENTS.md) 为准，区分“已整理的设计”和“已验证的正式实现”。
 
 | 事项 | 当前状态 | 交付或下一步 |
 | --- | --- | --- |
@@ -8,8 +8,8 @@
 | 手机与 PC 核心原型 | 已建立并验证原型交互 | [手机](../ui/mobile/index.html)、[PC](../ui/desktop/gallery.html)；不代表账号、上传、AI 和云同步已实现 |
 | 日记与多端行为细则 | 已写明实现默认与验收 | [交互规范](INTERACTION_SPEC.md)，含 Markdown、修订、图片、并发与撤销 |
 | 核心数据库与 API | 首条三餐流程已设计 | [核心契约](CORE_DATA_API.md)；后续日记、AI、图片与数据管理仍需按模块生成详细 schema/OpenAPI |
-| 开发任务拆分 | 第一阶段已展开，骨架开始执行 | [开发计划](DEVELOPMENT_PLAN.md) 的 T1 进行中，T2–T7 待实现；[工程骨架 S01–S03](ENGINEERING_BOOTSTRAP_PLAN.md) 已完成，S04–S11 待执行；M2–M5 有范围边界 |
-| 正式工程、Git 与 CI | Git、根 workspace 与后端入口已建立 | [S02 验证](validation/T1-workspace.md)与 [S03 验证](validation/T1-backend.md)已完成；客户端、业务接口、PostgreSQL 和 CI 待建立 |
+| 开发任务拆分 | 第一阶段已展开，骨架开始执行 | [开发计划](DEVELOPMENT_PLAN.md) 的 T1 进行中，T2–T7 待实现；[工程骨架 S01–S04](ENGINEERING_BOOTSTRAP_PLAN.md) 已完成，S05–S11 待执行；M2–M5 有范围边界 |
+| 正式工程、Git 与 CI | Git、workspace 与后端公共 API 能力已建立 | [S02](validation/T1-workspace.md)、[S03](validation/T1-backend.md)和 [S04](validation/T1-api.md) 验证已完成；客户端、业务接口、PostgreSQL 和 CI 待建立 |
 | 跨端真实业务验证 | 待实施 | 手机记录一餐，PC 修改，手机恢复前台看到同一记录；执行核心契约 §8 |
 | AI 最小技术验证 | 待实施 | SSE 真机接收、后台恢复、持久化审批、Worker 重启不重复写入 |
 | 环境与发布 | 待配置/验证 | 测试 Auth/API/数据库、地区可达性、签名分发、生产预算与备份恢复 |

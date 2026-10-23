@@ -7,6 +7,7 @@
 - S01：工具链版本确认完成，见 [环境记录](doc/validation/T1-environment.md)。
 - S02：建立根 workspace、版本约定、TypeScript 基础配置和 Biome 检查；验证结果见 [S02 记录](doc/validation/T1-workspace.md)。
 - S03：FastAPI 入口、环境配置与脱敏校验完成；25 项测试及实际启动通过，见 [S03 记录](doc/validation/T1-backend.md)。
+- S04：统一响应、错误处理、追踪、CORS 和存活检查完成；52 项后端测试与真实 HTTP 验证通过，见 [S04 记录](doc/validation/T1-api.md)。
 - Web、手机应用和数据库尚未创建；后端当前没有业务接口。
 
 开发前阅读 [AGENT.md](AGENT.md)、[文档入口](doc/README.md)和 [工程骨架实施计划](doc/ENGINEERING_BOOTSTRAP_PLAN.md)。
@@ -58,12 +59,12 @@ pnpm test:backend
 | `pnpm lint:js` | Biome 格式、语法与推荐规则，警告也失败；当前处理三个根 JSON 配置 |
 | `pnpm lint:python` | 后端 Ruff 规则与格式检查 |
 | `pnpm format` / `pnpm format:python` | 分别格式化 Biome 范围 / Python 后端；会修改文件 |
-| `pnpm test:backend` | 后端 pytest；当前覆盖配置与应用工厂，无须数据库 |
+| `pnpm test:backend` | 后端 pytest；当前覆盖配置、工厂、响应、追踪、CORS 与存活检查，无须数据库 |
 | `pnpm dev:backend` | 在 127.0.0.1:8000 启动 FastAPI；需先配置根 `.env` 或进程环境 |
 
 Biome 仅覆盖根配置与后续 `apps/`、`packages/`、`tests/` 下的正式文件；Ruff 覆盖 `services/backend/`。`ui/` 原型、第三方 vendor 和生成文件不在格式化范围。当前尚无正式 TypeScript 源码，`tsconfig.base.json` 作为后续各包配置的基础；全局 `typecheck`、`test`、`build` 在对应实现出现后添加。
 
-后端配置、启动与检查详见 [services/backend/README.md](services/backend/README.md)。根 [`.env.example`](.env.example) 只提供占位符；已有本地 `.env` 时不要覆盖。配置有效即可启动 S03 工厂，但数据库连通性在 S05 验证。
+后端配置、启动与检查详见 [services/backend/README.md](services/backend/README.md)。根 [`.env.example`](.env.example) 只提供占位符；已有本地 `.env` 时不要覆盖。配置有效即可启动后端并访问 `/health/live`；它只表示进程存活，数据库连通性在 S05 验证。
 
 ## 目录约定
 
@@ -75,7 +76,7 @@ Biome 仅覆盖根配置与后续 `apps/`、`packages/`、`tests/` 下的正式�
 | `ui/shared/`、`ui/brand/` | 已有：共用设计资料和品牌提案 |
 | `apps/*` | 已配置 workspace 匹配规则；Web / 手机应用将在 S08 / S09 创建 |
 | `packages/*` | 已配置 workspace 匹配规则；API 类型与设计变量包将在 S06 / S07 创建 |
-| `services/backend/` | S03：FastAPI 工厂、环境配置、依赖锁与后端测试 |
+| `services/backend/` | S03/S04：工厂、配置、响应、追踪、CORS、存活检查与测试 |
 | `infra/` | 待 S05 创建本地数据库配置 |
 
 共享代码仅在出现实际使用方时建立，不提前创建空业务模块。

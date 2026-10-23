@@ -10,7 +10,7 @@
 
 **依据：** [开发规范](../AGENT.md)、[V1 需求](LIFE_CANVAS_V1_REQUIREMENTS.md)、[核心契约](CORE_DATA_API.md)、[总开发计划 T1](DEVELOPMENT_PLAN.md#t1可启动的工程数据库和契约检查)。
 
-更新：2026-10-22。状态：**S01–S03 已完成，S04–S11 待执行**。工具链选择见 [S01 环境记录](validation/T1-environment.md)，workspace 见 [S02 记录](validation/T1-workspace.md)，后端入口与配置验收见 [S03 记录](validation/T1-backend.md)。本文件细化 T1，不替代 T2–T7；后续步骤的新增文件、命令和测试仍是实施目标。
+更新：2026-10-23。状态：**S01–S04 已完成，S05–S11 待执行**。工具链选择见 [S01 环境记录](validation/T1-environment.md)，workspace 见 [S02 记录](validation/T1-workspace.md)，后端入口与配置见 [S03 记录](validation/T1-backend.md)，接口与追踪见 [S04 记录](validation/T1-api.md)。本文件细化 T1，不替代 T2–T7；后续步骤的新增文件、命令和测试仍是实施目标。
 
 ## 1. 范围与约束
 
@@ -30,7 +30,7 @@ S01 记录机器默认环境；S02/S03 已安装项目本地工具与根/后端�
 
 | 项目 | 2026-10-22 观察结果 | 实施时处理 |
 | --- | --- | --- |
-| 工程 | 根 workspace 与基线提交已建立；后端工厂、配置、uv 锁文件和测试可运行；尚无正式客户端 | S04 接入响应与追踪，S05 接入数据库 |
+| 工程 | 根 workspace 与基线提交已建立；后端工厂、配置、uv 锁文件和测试可运行；尚无正式客户端 | S04 响应与追踪已完成，S05 接入数据库 |
 | Node / pnpm | 机器默认 20.19.6 / 10.28.2；项目本地 24.22.1 / 10.30.3 | 根目录选择 `.tools/bin`；未修改全局默认值 |
 | Python / uv | 机器原有 Python 3.13.9 / uv 0.10.2；项目本地已安装 Python 3.12.15 arm64 / uv 0.13.5 | 按 README 选择项目工具与 uv 目录；未修改原有默认环境 |
 | Docker | CLI 29.1.3；`docker info` 返回非零 | S05 确认 Docker 服务可用后才验证数据库；不能据此判断 Docker 未安装 |
@@ -103,15 +103,17 @@ S01 记录机器默认环境；S02/S03 已安装项目本地工具与根/后端�
 
 ### S04：实现 REST API 的公共响应能力
 
+**完成记录：** [S04 接口、追踪与存活检查验证](validation/T1-api.md)。52 项测试、lint 和真实 HTTP 检查通过；数据库仍未接入。
+
 **文件：** 新增 `services/backend/app/core/{response.py,errors.py,tracing.py}`、`services/backend/app/health.py`、`services/backend/tests/{test_api_contract.py,test_health.py}`；修改 `services/backend/app/main.py`。
 
 **接口：** `ApiResponse[T]` 仅含 `code: int`、`msg: str`、`data: T`、`traceId: str`；`HealthRead.status` 为字面量 `"ok"`；`GET /health/live` 返回 `ApiResponse[HealthRead]`。`get_trace_id() -> str` 提供当前请求日志/响应使用的标识。成功响应构造 `success(data: T, *, trace_id: str, status_code: int = 200) -> ApiResponse[T]`，路由 HTTP 状态须同步设置。
 
-- [ ] 写响应断言：`set(body) == {"code", "msg", "data", "traceId"}`、`body["code"] == response.status_code`、`body["traceId"] == response.headers["X-Trace-Id"]`，traceId 匹配 `[0-9a-f]{32}`；live 的 `data == {"status": "ok"}`。
-- [ ] 在隔离测试应用覆盖 200/201/202、400 损坏 JSON、404/405、422 字段错误、401/429 和未处理 500；核对 `Location`、`Allow`、`WWW-Authenticate`、`Retry-After` 保留，错误不含堆栈和测试敏感输入。调试故障路由只存在于测试应用。
-- [ ] 增加伪造 `X-Trace-Id`、并发请求日志隔离、204/304/HEAD 无体与 CORS 测试；允许的 Web origin 在正常和 500 响应中均能读取 `X-Trace-Id`/`Location`。先确认失败再实现追踪中间件、异常处理及健康路由。
-- [ ] 保持 OpenAPI JSON 和文档端点的标准协议；不提前实现 SSE/下载业务，只确保统一响应通过路由 schema/异常处理完成，不是无差别改写所有响应字节。
-- [ ] 验收：`uv run --project services/backend pytest services/backend/tests/test_api_contract.py services/backend/tests/test_health.py -q` 通过；`curl -i http://127.0.0.1:8000/health/live` 返回 200 和约定 JSON。
+- [x] 写响应断言：`set(body) == {"code", "msg", "data", "traceId"}`、`body["code"] == response.status_code`、`body["traceId"] == response.headers["X-Trace-Id"]`，traceId 匹配 `[0-9a-f]{32}`；live 的 `data == {"status": "ok"}`。
+- [x] 在隔离测试应用覆盖 200/201/202、400 损坏 JSON、404/405、422 字段错误、401/429 和未处理 500；核对 `Location`、`Allow`、`WWW-Authenticate`、`Retry-After` 保留，错误不含堆栈和测试敏感输入。调试故障路由只存在于测试应用。
+- [x] 增加伪造 `X-Trace-Id`、并发请求日志隔离、204/304/HEAD 无体与 CORS 测试；允许的 Web origin 在正常和 500 响应中均能读取 `X-Trace-Id`/`Location`。先确认失败再实现追踪中间件、异常处理及健康路由。
+- [x] 保持 OpenAPI JSON 和文档端点的标准协议；不提前实现 SSE/下载业务，只确保统一响应通过路由 schema/异常处理完成，不是无差别改写所有响应字节。
+- [x] 验收：`uv run --project services/backend pytest services/backend/tests/test_api_contract.py services/backend/tests/test_health.py -q` 通过；`curl -i http://127.0.0.1:8000/health/live` 返回 200 和约定 JSON。
 
 ### S05：接通 PostgreSQL、就绪检查和迁移
 

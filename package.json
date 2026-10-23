@@ -15,7 +15,7 @@
     "format": "biome format --write .",
     "format:python": "uv run --frozen --project services/backend ruff format services/backend",
     "test:backend": "uv run --frozen --project services/backend pytest services/backend/tests -q",
-    "dev:backend": "uv run --frozen --project services/backend uvicorn app.main:create_app --factory --app-dir services/backend --host 127.0.0.1 --port 8000"
+    "dev:backend": "uv run --frozen --project services/backend uvicorn app.main:create_app --factory --app-dir services/backend --host 127.0.0.1 --port 8000 --no-access-log"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.2",

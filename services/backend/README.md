@@ -1,6 +1,6 @@
 # Life Canvas 后端
 
-S03 提供 FastAPI 应用工厂、环境配置与校验。业务接口和统一响应在 S04 接入，PostgreSQL 连接与迁移在 S05 接入。
+S03 提供 FastAPI 应用工厂、环境配置与校验；S04 已接入统一响应、异常处理、请求追踪、CORS 和存活检查。PostgreSQL 连接与迁移在 S05 接入，业务接口按后续任务实施。
 
 ## 安装
 
@@ -31,10 +31,14 @@ pnpm dev:backend
 等价命令：
 
 ```sh
-uv run --frozen --project services/backend uvicorn app.main:create_app --factory --app-dir services/backend --host 127.0.0.1 --port 8000
+uv run --frozen --project services/backend uvicorn app.main:create_app --factory --app-dir services/backend --host 127.0.0.1 --port 8000 --no-access-log
 ```
 
-访问 [API 文档](http://127.0.0.1:8000/docs) 或 [OpenAPI](http://127.0.0.1:8000/openapi.json)。此阶段尚无业务路由；配置通过与服务启动不代表数据库已经连通。`CORS_ORIGINS` 已校验，中间件行为在 S04 实现。
+访问 [存活检查](http://127.0.0.1:8000/health/live)、[API 文档](http://127.0.0.1:8000/docs) 或 [OpenAPI](http://127.0.0.1:8000/openapi.json)。GET 存活检查返回统一 JSON，data 为 `{"status":"ok"}`；HEAD 只返回响应头。此阶段尚无业务路由；存活检查不连接数据库，`/health/ready` 仍待 S05 实现。
+
+普通 JSON 使用 code/msg/data/traceId；损坏 JSON 返回 400，字段错误返回 422，未处理异常返回安全的 500。响应头 X-Trace-Id、正文和服务端请求日志使用同一 ID；外部传入的追踪头不被直接采信。CORS 向配置来源开放追踪头、Location 和 Retry-After，支持 REST 方法及认证/幂等请求头。
+
+应用日志只记录路由模板等必要信息，不记录完整 URL/query、请求体或异常中的私密原文。启动命令禁用 Uvicorn 原始访问日志。框架文档、CORS 预检、SSE/下载与无体响应保留各自协议；流开始后的异常中断传输，不再追加 JSON。详细验证见 [S04 记录](../../doc/validation/T1-api.md)。
 
 `DATABASE_URL` 使用 `SecretStr`，配置打印与序列化均脱敏；校验错误隐藏输入值。只有创建数据库引擎时才取原值，不能将它写入日志或 API 响应。Pydantic 的 `ValidationError.errors()` 仍可能携带原始输入，禁止直接打印或返回该结构；需要结构化错误时必须显式排除输入与上下文。
 
@@ -55,4 +59,4 @@ uv run --frozen --project services/backend ruff format --check services/backend
 uv run --frozen --project services/backend pytest services/backend/tests -q
 ```
 
-测试隔离环境文件和相关进程变量，仅使用合成连接串，不连接数据库。覆盖缺配置、错误 URL、显式配置注入、脱敏、固定环境文件位置与 origin 校验。
+测试隔离环境文件和相关进程变量，仅使用合成连接串，不连接数据库。当前共 52 项测试，覆盖配置/工厂、响应契约、错误脱敏、并发追踪、CORS、无体响应、流中断与存活检查；测试故障路由不注册到正式应用。

@@ -6,7 +6,7 @@
 
 ## 1. 提交与工具
 
-- 按用户“先提交代码，再继续”的要求，先提交此前的需求、UI 原型和 S01/S02 成果：`e8bde27`，`chore: initialize workspace with product specs and UI prototypes`。提交后确认工作区干净，再实施 S03。没有配置远程或推送；本记录及 S03 新改动尚在工作区。
+- 按用户“先提交代码，再继续”的要求，先提交此前的需求、UI 原型和 S01/S02 成果：`e8bde27`，`chore: initialize workspace with product specs and UI prototypes`。提交后确认工作区干净，再实施 S03。没有配置远程或推送；本记录及 S03 改动于 2026-10-23 复验后提交为 `b3775f7`。
 - uv **0.13.5** 使用官方 PyPI macOS arm64 wheel，校验包元数据中的 SHA-256 后放入被忽略的 `.tools/`，由 `.tools/bin/uv` 选择。
 - uv 管理的 Python **3.12.15 arm64** 位于 `.tools/python/`；后端独立环境位于 `services/backend/.venv/`，实测解释器版本与架构一致。未修改系统 Python、全局 uv 或 shell 配置。
 - 首次大文件下载遇到超时和连接中断，使用官方来源分段下载后完成安装；后续 uv 下载临时设置 `UV_HTTP_TIMEOUT=900`。没有更换项目依赖源或降低版本。
