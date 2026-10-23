@@ -6,7 +6,8 @@
 
 - S01：工具链版本确认完成，见 [环境记录](doc/validation/T1-environment.md)。
 - S02：建立根 workspace、版本约定、TypeScript 基础配置和 Biome 检查；验证结果见 [S02 记录](doc/validation/T1-workspace.md)。
-- Web、手机应用、后端和数据库尚未创建。当前没有应用启动、业务测试或构建命令。
+- S03：FastAPI 入口、环境配置与脱敏校验完成；25 项测试及实际启动通过，见 [S03 记录](doc/validation/T1-backend.md)。
+- Web、手机应用和数据库尚未创建；后端当前没有业务接口。
 
 开发前阅读 [AGENT.md](AGENT.md)、[文档入口](doc/README.md)和 [工程骨架实施计划](doc/ENGINEERING_BOOTSTRAP_PLAN.md)。
 
@@ -18,39 +19,51 @@
 | pnpm | 10.30.3 |
 | TypeScript | 5.9.3 |
 | Biome | 2.6.2 |
-| Python（S03 后端使用） | 3.12.15 |
+| Python | 3.12.15 |
+| uv | 0.13.5 |
 
-`.nvmrc` 与 `.python-version` 固定解释器版本；`packageManager` 固定 pnpm；`pnpm-lock.yaml` 固定已安装的 JavaScript 依赖。Python 环境和 `uv.lock` 在 S03 建立。
+`.nvmrc` 与 `.python-version` 固定解释器版本；`packageManager` 固定 pnpm；`pnpm-lock.yaml` 固定 JavaScript 依赖，`services/backend/uv.lock` 固定 Python 依赖。
 
 ## 安装与检查
 
-在项目根目录使用 Node 24.22.1 和 pnpm 10.30.3：
-
-```sh
-node --version
-pnpm --version
-pnpm install --frozen-lockfile
-pnpm lint
-```
-
-当前开发机已准备项目本地工具，打开新终端后可以使用：
+在项目根目录使用上表中的固定版本工具。当前开发机已准备项目本地工具，打开新终端后先执行：
 
 ```sh
 export PATH="$PWD/.tools/bin:$PATH"
+export UV_CACHE_DIR="$PWD/.tools/uv-cache"
+export UV_PYTHON_INSTALL_DIR="$PWD/.tools/python"
 node --version
 pnpm --version
+uv --version
 ```
 
-`.tools/` 是被忽略的本机工具目录，克隆仓库不会自动包含它。其他机器可用 nvm 按 `.nvmrc` 执行 `nvm install` / `nvm use`，再通过 Corepack 的 `corepack pnpm` 使用 `packageManager` 指定的版本；也可使用自行安装的准确版本 pnpm。无需改动其他项目的默认工具版本。
+`.tools/` 是被忽略的本机工具目录，克隆仓库不会自动包含它。其他机器可用 nvm 按 `.nvmrc` 执行 `nvm install` / `nvm use`，再通过 Corepack 的 `corepack pnpm` 使用 `packageManager` 指定的版本；也可使用自行安装的准确版本 pnpm。uv 使用固定的 0.13.5；运行 `uv sync` 时可按需下载 Python。无需改动其他项目的默认工具版本。
 
 pnpm 依赖缓存固定在项目的 `.tools/pnpm-store/`；从根目录安装，其他机器按锁文件重新下载即可。
 
+工具准备好后安装与检查：
+
+```sh
+pnpm install --frozen-lockfile
+uv sync --project services/backend --frozen --python 3.12.15
+pnpm lint
+pnpm test:backend
+```
+
+首次下载在慢速网络下超时时，可临时加 `UV_HTTP_TIMEOUT=900` 重试 uv 安装命令，不修改依赖源或锁文件。
+
 | 命令 | 实际覆盖范围 |
 | --- | --- |
-| `pnpm lint` | Biome 检查格式、支持的语法与推荐规则，警告也会失败；当前处理根目录的三个 JSON 配置 |
-| `pnpm format` | 自动格式化同一范围；会修改文件 |
+| `pnpm lint` | 顺序执行 Biome 与 Python 检查，任一失败则整体失败 |
+| `pnpm lint:js` | Biome 格式、语法与推荐规则，警告也失败；当前处理三个根 JSON 配置 |
+| `pnpm lint:python` | 后端 Ruff 规则与格式检查 |
+| `pnpm format` / `pnpm format:python` | 分别格式化 Biome 范围 / Python 后端；会修改文件 |
+| `pnpm test:backend` | 后端 pytest；当前覆盖配置与应用工厂，无须数据库 |
+| `pnpm dev:backend` | 在 127.0.0.1:8000 启动 FastAPI；需先配置根 `.env` 或进程环境 |
 
-Biome 仅覆盖根配置与后续 `apps/`、`packages/`、`tests/` 下的正式文件。`ui/` 原型、第三方 vendor 和生成文件不在格式化范围。当前尚无正式 TypeScript 源码，`tsconfig.base.json` 作为后续各包配置的基础；`typecheck`、`test`、`build` 在对应实现出现后添加。
+Biome 仅覆盖根配置与后续 `apps/`、`packages/`、`tests/` 下的正式文件；Ruff 覆盖 `services/backend/`。`ui/` 原型、第三方 vendor 和生成文件不在格式化范围。当前尚无正式 TypeScript 源码，`tsconfig.base.json` 作为后续各包配置的基础；全局 `typecheck`、`test`、`build` 在对应实现出现后添加。
+
+后端配置、启动与检查详见 [services/backend/README.md](services/backend/README.md)。根 [`.env.example`](.env.example) 只提供占位符；已有本地 `.env` 时不要覆盖。配置有效即可启动 S03 工厂，但数据库连通性在 S05 验证。
 
 ## 目录约定
 
@@ -62,7 +75,7 @@ Biome 仅覆盖根配置与后续 `apps/`、`packages/`、`tests/` 下的正式�
 | `ui/shared/`、`ui/brand/` | 已有：共用设计资料和品牌提案 |
 | `apps/*` | 已配置 workspace 匹配规则；Web / 手机应用将在 S08 / S09 创建 |
 | `packages/*` | 已配置 workspace 匹配规则；API 类型与设计变量包将在 S06 / S07 创建 |
-| `services/backend/` | 待 S03 创建 FastAPI 后端 |
+| `services/backend/` | S03：FastAPI 工厂、环境配置、依赖锁与后端测试 |
 | `infra/` | 待 S05 创建本地数据库配置 |
 
 共享代码仅在出现实际使用方时建立，不提前创建空业务模块。

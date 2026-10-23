@@ -9,8 +9,13 @@
     "pnpm": "10.30.3"
   },
   "scripts": {
-    "lint": "biome check --error-on-warnings .",
-    "format": "biome format --write ."
+    "lint": "pnpm lint:js && pnpm lint:python",
+    "lint:js": "biome check --error-on-warnings .",
+    "lint:python": "uv run --frozen --project services/backend ruff check services/backend && uv run --frozen --project services/backend ruff format --check services/backend",
+    "format": "biome format --write .",
+    "format:python": "uv run --frozen --project services/backend ruff format services/backend",
+    "test:backend": "uv run --frozen --project services/backend pytest services/backend/tests -q",
+    "dev:backend": "uv run --frozen --project services/backend uvicorn app.main:create_app --factory --app-dir services/backend --host 127.0.0.1 --port 8000"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.2",

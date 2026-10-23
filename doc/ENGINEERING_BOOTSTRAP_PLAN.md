@@ -10,7 +10,7 @@
 
 **依据：** [开发规范](../AGENT.md)、[V1 需求](LIFE_CANVAS_V1_REQUIREMENTS.md)、[核心契约](CORE_DATA_API.md)、[总开发计划 T1](DEVELOPMENT_PLAN.md#t1可启动的工程数据库和契约检查)。
 
-更新：2026-10-22。状态：**S01–S02 已完成，S03–S11 待执行**。工具链选择见 [S01 环境记录](validation/T1-environment.md)，workspace 与检查结果见 [S02 记录](validation/T1-workspace.md)。本文件细化 T1，不替代 T2–T7；后续步骤的新增文件、命令和测试仍是实施目标。
+更新：2026-10-22。状态：**S01–S03 已完成，S04–S11 待执行**。工具链选择见 [S01 环境记录](validation/T1-environment.md)，workspace 见 [S02 记录](validation/T1-workspace.md)，后端入口与配置验收见 [S03 记录](validation/T1-backend.md)。本文件细化 T1，不替代 T2–T7；后续步骤的新增文件、命令和测试仍是实施目标。
 
 ## 1. 范围与约束
 
@@ -26,13 +26,13 @@
 
 ## 2. 当前环境与审查重点
 
-S01 记录机器默认环境；S02 已安装项目本地 Node/pnpm 和根依赖，详细依据与验证见 [环境记录](validation/T1-environment.md)、[workspace 记录](validation/T1-workspace.md)：
+S01 记录机器默认环境；S02/S03 已安装项目本地工具与根/后端依赖，详细依据与验证见 [环境记录](validation/T1-environment.md)、[workspace 记录](validation/T1-workspace.md)、[后端入口记录](validation/T1-backend.md)：
 
 | 项目 | 2026-10-22 观察结果 | 实施时处理 |
 | --- | --- | --- |
-| 工程 | 根 workspace、检查配置与 pnpm 锁文件已建立；Git 尚无提交，无应用/后端源码 | S03 继续建立后端，保留现有内容 |
+| 工程 | 根 workspace 与基线提交已建立；后端工厂、配置、uv 锁文件和测试可运行；尚无正式客户端 | S04 接入响应与追踪，S05 接入数据库 |
 | Node / pnpm | 机器默认 20.19.6 / 10.28.2；项目本地 24.22.1 / 10.30.3 | 根目录选择 `.tools/bin`；未修改全局默认值 |
-| Python / uv | 默认 Python 3.13.9；另有 x86_64 Python 3.12.13；uv 0.10.2 | 后端使用 Python 3.12.15 arm64、uv 0.13.5，不覆盖现有默认环境 |
+| Python / uv | 机器原有 Python 3.13.9 / uv 0.10.2；项目本地已安装 Python 3.12.15 arm64 / uv 0.13.5 | 按 README 选择项目工具与 uv 目录；未修改原有默认环境 |
 | Docker | CLI 29.1.3；`docker info` 返回非零 | S05 确认 Docker 服务可用后才验证数据库；不能据此判断 Docker 未安装 |
 | iOS | Xcode 26.2；iOS SDK / 可用模拟器运行时 26.2 | 采用兼容的 Expo SDK 55；S09/S11 验证实际构建启动 |
 | Android | SDK 标准目录及 adb 未找到；当前 Java 21，无已登记 JDK 17 | S09 补齐 JDK 17、SDK Platform 36 及设备后验收 |
@@ -94,10 +94,12 @@ S01 记录机器默认环境；S02 已安装项目本地 Node/pnpm 和根依赖�
 
 **接口：** `Settings` 读取 `APP_ENV`、`DATABASE_URL`、`CORS_ORIGINS`；`load_settings() -> Settings`；`create_app(settings: Settings | None = None) -> FastAPI`。`DATABASE_URL` 使用不直接打印的敏感值类型；无参数的 factory 从环境读取。
 
-- [ ] 写 `test_missing_database_url_fails`、`test_invalid_database_url_fails`、`test_explicit_settings_override_environment`，断言必需项错误明确且异常文本/配置 repr 不含测试密码；运行确认行为尚未实现。
-- [ ] 配置 Python 3.12、FastAPI/Pydantic/SQLAlchemy/psycopg/Alembic 与 Ruff/pytest/httpx 测试依赖；用 uv 生成锁文件。建立工厂入口，环境文件加载位置明确，不依赖调用者碰巧位于某个 cwd。
-- [ ] `.env.example` 只放变量、说明和占位符；根 `.env` 供本地后端/Compose 使用，前端仅读取各自公开配置。后续迁移独立使用 `MIGRATION_DATABASE_URL`，不把迁移凭据塞进客户端。
-- [ ] 验收：`uv run --project services/backend pytest services/backend/tests/test_config.py -q` 通过；`uv run --project services/backend uvicorn app.main:create_app --factory --app-dir services/backend --port 8000` 能启动；缺配置时启动失败且无秘密值。
+**完成记录：** [S03 后端入口与配置验证](validation/T1-backend.md)。25 项测试、实际启动与失败路径、Ruff 和依赖一致性检查通过；没有连接数据库。
+
+- [x] 写 `test_missing_database_url_fails`、`test_invalid_database_url_fails`、`test_explicit_settings_override_environment`，断言必需项错误明确且异常文本/配置 repr 不含测试密码；运行确认行为尚未实现。
+- [x] 配置 Python 3.12、FastAPI/Pydantic/SQLAlchemy/psycopg/Alembic 与 Ruff/pytest/httpx 测试依赖；用 uv 生成锁文件。建立工厂入口，环境文件加载位置明确，不依赖调用者碰巧位于某个 cwd。
+- [x] `.env.example` 只放变量、说明和占位符；根 `.env` 供本地后端/Compose 使用，前端仅读取各自公开配置。后续迁移独立使用 `MIGRATION_DATABASE_URL`，不把迁移凭据塞进客户端。
+- [x] 验收：`uv run --project services/backend pytest services/backend/tests/test_config.py -q` 通过；`uv run --project services/backend uvicorn app.main:create_app --factory --app-dir services/backend --port 8000` 能启动；缺配置时启动失败且无秘密值。
 
 ### S04：实现 REST API 的公共响应能力
 

@@ -12,7 +12,7 @@
 
 ## 2. 目录与文件归属
 
-截至本次更新，已有 `doc/`、`ui/`、Git、根 pnpm workspace、版本文件、基础检查与 pnpm 锁文件；Web、手机应用和后端源码尚未创建。S02 验证见 [workspace 记录](doc/validation/T1-workspace.md)，以后以文件系统实际状态为准。
+截至本次更新，已有 `doc/`、`ui/`、Git、根 pnpm workspace、FastAPI 工厂与环境配置、依赖锁文件和基础检查；Web、手机应用、业务接口与数据库连接尚未创建。已完成 S01–S03，见 [workspace 记录](doc/validation/T1-workspace.md)和[后端入口记录](doc/validation/T1-backend.md)，以后以文件系统实际状态为准。
 
 | 目录 | 用途 |
 | --- | --- |
@@ -25,7 +25,7 @@
 | `packages/api-client/` | 规划中的 OpenAPI 生成类型与请求封装 |
 | `packages/client-core/` | 规划中的跨端校验、日期、状态和业务逻辑 |
 | `packages/design-tokens/` | 规划中的正式跨端设计变量 |
-| `services/backend/` | 规划中的 FastAPI、业务模块、迁移与后端测试 |
+| `services/backend/` | 已有 FastAPI 工厂、配置与后端测试；业务模块和迁移后续添加 |
 | `infra/` | 规划中的部署、本地环境与基础设施配置 |
 
 - 每端专属文件放回对应端，按现有 `styles/`、`scripts/`、`screens/`、`exports/`、`docs/`、`tools/` 分类；不要再把手机或 PC 文件散放到 `ui/` 根目录。
@@ -98,14 +98,18 @@
 
 ## 8. 当前可运行的命令
 
-正式工程目前完成根 workspace。使用 Node 24.22.1、pnpm 10.30.3，在根目录执行：
+正式工程目前完成根 workspace 与后端配置入口。使用 Node 24.22.1、pnpm 10.30.3、Python 3.12.15、uv 0.13.5，在根目录执行：
 
 ```sh
 pnpm install --frozen-lockfile
+uv sync --project services/backend --frozen --python 3.12.15
 pnpm lint
+pnpm test:backend
 ```
 
-本机可先执行 `export PATH="$PWD/.tools/bin:$PATH"` 使用项目本地工具；其他机器按 [README](README.md) 准备固定版本。当前 lint 为 Biome，警告也会失败；`pnpm format` 会格式化同一正式文件范围，不处理原型。Python/Ruff、typecheck、test、build 随后续实现接入，不能把未来命令当成现有检查。
+本机先按 [README](README.md) 设置项目本地工具 PATH 与 uv 路径；其他机器按同文档准备固定版本。当前 lint 包含 Biome 和 Ruff；`pnpm format` / `pnpm format:python` 分别格式化对应正式文件范围，不处理原型。`pnpm test:backend` 目前只覆盖配置与应用工厂；全局 typecheck/test/build 与 CI 随后续实现接入。
+
+后端使用根 `.env` 或进程环境变量配置，通过 `pnpm dev:backend` 启动。配置缺失时明确失败，打印配置和启动错误必须隐藏数据库密码；不要直接输出 `ValidationError.errors()` 中的输入与上下文。S03 尚不连接数据库，也未接入 S04 的统一响应和 CORS 中间件，详见[后端说明](services/backend/README.md)。
 
 原型预览与验证：
 
