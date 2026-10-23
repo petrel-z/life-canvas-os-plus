@@ -10,7 +10,7 @@
 
 **依据：** [开发规范](../AGENT.md)、[V1 需求](LIFE_CANVAS_V1_REQUIREMENTS.md)、[核心契约](CORE_DATA_API.md)、[总开发计划 T1](DEVELOPMENT_PLAN.md#t1可启动的工程数据库和契约检查)。
 
-更新：2026-10-23。状态：**S01–S04 已完成，S05–S11 待执行**。工具链选择见 [S01 环境记录](validation/T1-environment.md)，workspace 见 [S02 记录](validation/T1-workspace.md)，后端入口与配置见 [S03 记录](validation/T1-backend.md)，接口与追踪见 [S04 记录](validation/T1-api.md)。本文件细化 T1，不替代 T2–T7；后续步骤的新增文件、命令和测试仍是实施目标。
+更新：2026-10-23。状态：**S01–S05 已完成，S06–S11 待执行**。工具链选择见 [S01 环境记录](validation/T1-environment.md)，workspace 见 [S02 记录](validation/T1-workspace.md)，后端入口与配置见 [S03 记录](validation/T1-backend.md)，接口与追踪见 [S04 记录](validation/T1-api.md)，数据库和迁移见 [S05 记录](validation/T1-database.md)。本文件细化 T1，不替代 T2–T7；后续步骤的新增文件、命令和测试仍是实施目标。
 
 ## 1. 范围与约束
 
@@ -31,10 +31,10 @@ S01 记录机器默认环境；S02/S03 已安装项目本地工具与根/后端�
 
 | 项目 | 2026-10-22 观察结果 | 实施时处理 |
 | --- | --- | --- |
-| 工程 | 根 workspace 与基线提交已建立；后端工厂、配置、uv 锁文件和测试可运行；尚无正式客户端 | S04 响应与追踪已完成，S05 接入数据库 |
+| 工程 | 根 workspace 与基线提交已建立；后端工厂、配置、uv 锁文件和测试可运行；尚无正式客户端 | S04 响应与追踪、S05 数据库与迁移已完成，下一步 S06 共享接口类型 |
 | Node / pnpm | 机器默认 20.19.6 / 10.28.2；项目本地 24.22.1 / 10.30.3 | 根目录选择 `.tools/bin`；未修改全局默认值 |
 | Python / uv | 机器原有 Python 3.13.9 / uv 0.10.2；项目本地已安装 Python 3.12.15 arm64 / uv 0.13.5 | 按 README 选择项目工具与 uv 目录；未修改原有默认环境 |
-| Docker | CLI 29.1.3；`docker info` 返回非零 | S05 确认 Docker 服务可用后才验证数据库；不能据此判断 Docker 未安装 |
+| Docker | S01：CLI 29.1.3；`docker info` 返回非零 | S05 已启动本机 Docker，独立 Compose PostgreSQL 17.11 及停止/恢复验收通过 |
 | iOS | Xcode 26.2；iOS SDK / 可用模拟器运行时 26.2 | 采用兼容的 Expo SDK 55；S09/S11 验证实际构建启动 |
 | Android | SDK 标准目录及 adb 未找到；当前 Java 21，无已登记 JDK 17 | S09 补齐 JDK 17、SDK Platform 36 及设备后验收 |
 
@@ -118,15 +118,17 @@ S01 记录机器默认环境；S02/S03 已安装项目本地工具与根/后端�
 
 ### S05：接通 PostgreSQL、就绪检查和迁移
 
+**完成记录：** [S05 数据库与迁移验证](validation/T1-database.md)。66 项后端测试、lint、真实 PostgreSQL 基线升级/回退/再升级和实际 HTTP 停止/恢复验证通过。开发分支为本地 `dev`。
+
 **文件：** 新增 `infra/compose.yaml`、`services/backend/{app/core/db.py,alembic.ini,alembic/env.py,alembic/script.py.mako,alembic/versions/0000_baseline.py,tests/integration/test_database.py}`；修改 `services/backend/{app/main.py,app/health.py,tests/test_health.py}` 和根 `.env.example`。
 
 **接口：** `create_engine(settings: Settings) -> AsyncEngine`，SQLAlchemy async engine 使用 psycopg 3；`probe_database(engine: AsyncEngine) -> bool` 在 2 秒总超时内执行 `SELECT 1`。`GET /health/ready` 可用时返回与 live 相同的成功结构；不可用时为 503，`data.reason == "DATABASE_UNAVAILABLE"`。
 
-- [ ] 写真实 PostgreSQL 连接和迁移测试，以及 DB 不可达时 `live.status_code == 200`、`ready.status_code == 503` 的接口测试。测试使用独立临时数据库，不能清理开发库或现有数据卷。
-- [ ] 创建只绑定本机的 PostgreSQL Compose 服务和 healthcheck；镜像版本来自 S01。凭据来自被忽略的本地环境配置，停止/恢复测试不删除数据卷。
-- [ ] 在应用 lifespan 创建/释放连接池，数据库连接失败不阻止存活检查；执行 DB 探测时不阻塞事件循环。T1 不加入身份事务或业务表，`UnitOfWork`、角色权限与 RLS 在 T2 实现。
-- [ ] 配置 Alembic 从 `MIGRATION_DATABASE_URL` 读取迁移连接。`0000_baseline` 仅建立迁移基线记录，不伪造业务模型；T2 的 `0001_identity` 接在它之后。
-- [ ] 验收：从根目录运行 `docker compose --env-file .env -f infra/compose.yaml up -d`，在后端目录运行 `uv run alembic upgrade head` 和 `uv run alembic current`；测试库执行基线升级→降到 base→再次升级成功。运行 `uv run --project services/backend pytest services/backend/tests/integration/test_database.py services/backend/tests/test_health.py -q`；手动停止/恢复数据库确认 ready 随之 503→200。
+- [x] 写真实 PostgreSQL 连接和迁移测试，以及 DB 不可达时 `live.status_code == 200`、`ready.status_code == 503` 的接口测试。测试使用独立临时数据库，不能清理开发库或现有数据卷。
+- [x] 创建只绑定本机的 PostgreSQL Compose 服务和 healthcheck；镜像版本来自 S01。凭据来自被忽略的本地环境配置，停止/恢复测试不删除数据卷。
+- [x] 在应用 lifespan 创建/释放连接池，数据库连接失败不阻止存活检查；执行 DB 探测时不阻塞事件循环。T1 不加入身份事务或业务表，`UnitOfWork`、角色权限与 RLS 在 T2 实现。
+- [x] 配置 Alembic 从 `MIGRATION_DATABASE_URL` 读取迁移连接。`0000_baseline` 仅建立迁移基线记录，不伪造业务模型；T2 的 `0001_identity` 接在它之后。
+- [x] 验收：从根目录运行 `docker compose --env-file .env -f infra/compose.yaml up -d`，在后端目录运行 `uv run alembic upgrade head` 和 `uv run alembic current`；测试库执行基线升级→降到 base→再次升级成功。运行 `uv run --project services/backend pytest services/backend/tests/integration/test_database.py services/backend/tests/test_health.py -q`；手动停止/恢复数据库确认 ready 随之 503→200。
 
 ### S06：打通 OpenAPI 与共享客户端类型
 

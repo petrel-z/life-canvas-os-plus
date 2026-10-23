@@ -12,7 +12,7 @@
 
 ## 2. 目录与文件归属
 
-截至本次更新，已有 `doc/`、`ui/`、Git、根 pnpm workspace、FastAPI 工厂与环境配置、依赖锁文件和基础检查；Web、手机应用、业务接口与数据库连接尚未创建。已完成 S01–S04，见 [workspace 记录](doc/validation/T1-workspace.md)、[后端入口记录](doc/validation/T1-backend.md)和[接口追踪记录](doc/validation/T1-api.md)，以后以文件系统实际状态为准。
+截至本次更新，已有 `doc/`、`ui/`、Git、根 pnpm workspace、FastAPI 公共接口能力、PostgreSQL 连接与 Alembic 基线、依赖锁文件和基础检查；Web、手机应用与业务接口尚未创建。已完成 S01–S05，见 [workspace 记录](doc/validation/T1-workspace.md)、[后端入口记录](doc/validation/T1-backend.md)、[接口追踪记录](doc/validation/T1-api.md)和[数据库记录](doc/validation/T1-database.md)，以后以文件系统实际状态为准。
 
 | 目录 | 用途 |
 | --- | --- |
@@ -25,8 +25,8 @@
 | `packages/api-client/` | 规划中的 OpenAPI 生成类型与请求封装 |
 | `packages/client-core/` | 规划中的跨端校验、日期、状态和业务逻辑 |
 | `packages/design-tokens/` | 规划中的正式跨端设计变量 |
-| `services/backend/` | 已有工厂、配置、统一响应、追踪、CORS 和存活检查；业务模块和迁移后续添加 |
-| `infra/` | 规划中的部署、本地环境与基础设施配置 |
+| `services/backend/` | 已有公共 API 能力、数据库连接、健康接口、基线迁移与测试；业务模块后续添加 |
+| `infra/` | 已有本机 PostgreSQL Compose 与运行说明；部署配置后续添加 |
 
 - 每端专属文件放回对应端，按现有 `styles/`、`scripts/`、`screens/`、`exports/`、`docs/`、`tools/` 分类；不要再把手机或 PC 文件散放到 `ui/` 根目录。
 - 只把确实两端共用的内容放入共享目录，不为尚未出现的功能建立通用框架或空模块。
@@ -98,7 +98,7 @@
 
 ## 8. 当前可运行的命令
 
-正式工程目前完成根 workspace 与后端配置入口。使用 Node 24.22.1、pnpm 10.30.3、Python 3.12.15、uv 0.13.5，在根目录执行：
+正式工程目前完成根 workspace、后端公共能力、数据库连接与基线迁移。使用 Node 24.22.1、pnpm 10.30.3、Python 3.12.15、uv 0.13.5，在根目录执行：
 
 ```sh
 pnpm install --frozen-lockfile
@@ -107,9 +107,9 @@ pnpm lint
 pnpm test:backend
 ```
 
-本机先按 [README](README.md) 设置项目本地工具 PATH 与 uv 路径；其他机器按同文档准备固定版本。当前 lint 包含 Biome 和 Ruff；`pnpm format` / `pnpm format:python` 分别格式化对应正式文件范围，不处理原型。`pnpm test:backend` 当前覆盖配置、工厂、响应契约、追踪、CORS 与存活检查；全局 typecheck/test/build 与 CI 随后续实现接入。
+本机先按 [README](README.md) 设置项目本地工具 PATH 与 uv 路径；其他机器按同文档准备固定版本。当前 lint 包含 Biome 和 Ruff；`pnpm format` / `pnpm format:python` 分别格式化对应正式文件范围，不处理原型。`pnpm test:backend` 覆盖配置、公共接口、健康检查与真实数据库/迁移；运行前按 [数据库说明](infra/README.md) 启动 Compose、配置 `TEST_DATABASE_URL`。集成测试创建并清理自己的临时库，不对开发库做回退；数据库缺失时明确失败。全局 typecheck/test/build 与 CI 随后续实现接入。
 
-后端使用根 `.env` 或进程环境变量配置，通过 `pnpm dev:backend` 启动。配置缺失时明确失败，打印配置和启动错误必须隐藏数据库密码；不要直接输出 `ValidationError.errors()` 中的输入与上下文。S04 已接入统一响应、追踪与 CORS，尚不连接数据库；启动命令禁用原始访问日志，使用不含私密 URL/query 的请求日志，详见[后端说明](services/backend/README.md)。
+后端使用根 `.env` 或进程环境变量配置，通过 `pnpm dev:backend` 启动。配置缺失时明确失败，打印配置和启动错误必须隐藏数据库密码；不要直接输出 `ValidationError.errors()` 中的输入与上下文。S05 已接入异步数据库连接和就绪检查；迁移独立读取 `MIGRATION_DATABASE_URL`，应用启动不自动迁移。启动命令禁用原始访问日志，使用不含私密 URL/query 的请求日志，详见[后端说明](services/backend/README.md)。
 
 原型预览与验证：
 

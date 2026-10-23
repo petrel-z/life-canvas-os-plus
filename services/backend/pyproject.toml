@@ -28,6 +28,7 @@ required-version = "==0.13.5"
 testpaths = ["tests"]
 pythonpath = ["."]
 addopts = "--strict-config --strict-markers"
+markers = ["integration: requires TEST_DATABASE_URL and creates isolated temporary PostgreSQL databases"]
 
 [tool.ruff]
 target-version = "py312"

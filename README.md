@@ -8,7 +8,8 @@
 - S02：建立根 workspace、版本约定、TypeScript 基础配置和 Biome 检查；验证结果见 [S02 记录](doc/validation/T1-workspace.md)。
 - S03：FastAPI 入口、环境配置与脱敏校验完成；25 项测试及实际启动通过，见 [S03 记录](doc/validation/T1-backend.md)。
 - S04：统一响应、错误处理、追踪、CORS 和存活检查完成；52 项后端测试与真实 HTTP 验证通过，见 [S04 记录](doc/validation/T1-api.md)。
-- Web、手机应用和数据库尚未创建；后端当前没有业务接口。
+- S05：PostgreSQL、本机 Compose、就绪检查与 Alembic 基线迁移完成，见 [S05 记录](doc/validation/T1-database.md)。
+- Web、手机应用尚未创建；后端当前没有业务接口。
 
 开发前阅读 [AGENT.md](AGENT.md)、[文档入口](doc/README.md)和 [工程骨架实施计划](doc/ENGINEERING_BOOTSTRAP_PLAN.md)。
 
@@ -48,8 +49,9 @@ pnpm 依赖缓存固定在项目的 `.tools/pnpm-store/`；从根目录安装，
 pnpm install --frozen-lockfile
 uv sync --project services/backend --frozen --python 3.12.15
 pnpm lint
-pnpm test:backend
 ```
+
+完整后端测试需真实 PostgreSQL：按 [数据库说明](infra/README.md) 配置根 `.env` 并启动 Compose，再运行 `pnpm test:backend`。测试只在随机临时库内执行迁移，不使用开发库做回退测试。
 
 首次下载在慢速网络下超时时，可临时加 `UV_HTTP_TIMEOUT=900` 重试 uv 安装命令，不修改依赖源或锁文件。
 
@@ -59,12 +61,12 @@ pnpm test:backend
 | `pnpm lint:js` | Biome 格式、语法与推荐规则，警告也失败；当前处理三个根 JSON 配置 |
 | `pnpm lint:python` | 后端 Ruff 规则与格式检查 |
 | `pnpm format` / `pnpm format:python` | 分别格式化 Biome 范围 / Python 后端；会修改文件 |
-| `pnpm test:backend` | 后端 pytest；当前覆盖配置、工厂、响应、追踪、CORS 与存活检查，无须数据库 |
+| `pnpm test:backend` | 后端 pytest；覆盖配置、响应、追踪、健康接口、真实 PostgreSQL 与迁移，需配置 `TEST_DATABASE_URL` |
 | `pnpm dev:backend` | 在 127.0.0.1:8000 启动 FastAPI；需先配置根 `.env` 或进程环境 |
 
 Biome 仅覆盖根配置与后续 `apps/`、`packages/`、`tests/` 下的正式文件；Ruff 覆盖 `services/backend/`。`ui/` 原型、第三方 vendor 和生成文件不在格式化范围。当前尚无正式 TypeScript 源码，`tsconfig.base.json` 作为后续各包配置的基础；全局 `typecheck`、`test`、`build` 在对应实现出现后添加。
 
-后端配置、启动与检查详见 [services/backend/README.md](services/backend/README.md)。根 [`.env.example`](.env.example) 只提供占位符；已有本地 `.env` 时不要覆盖。配置有效即可启动后端并访问 `/health/live`；它只表示进程存活，数据库连通性在 S05 验证。
+后端配置、启动与检查详见 [services/backend/README.md](services/backend/README.md)。根 [`.env.example`](.env.example) 只提供占位符；已有本地 `.env` 时不要覆盖。配置有效即可启动后端并访问 `/health/live`；`/health/ready` 在数据库可连接时返回 200，不可用时返回 503。Compose、迁移与数据库测试命令见 [infra/README.md](infra/README.md)。
 
 ## 目录约定
 
@@ -76,8 +78,8 @@ Biome 仅覆盖根配置与后续 `apps/`、`packages/`、`tests/` 下的正式�
 | `ui/shared/`、`ui/brand/` | 已有：共用设计资料和品牌提案 |
 | `apps/*` | 已配置 workspace 匹配规则；Web / 手机应用将在 S08 / S09 创建 |
 | `packages/*` | 已配置 workspace 匹配规则；API 类型与设计变量包将在 S06 / S07 创建 |
-| `services/backend/` | S03/S04：工厂、配置、响应、追踪、CORS、存活检查与测试 |
-| `infra/` | 待 S05 创建本地数据库配置 |
+| `services/backend/` | S03–S05：后端公共能力、数据库连接、健康接口、迁移与测试 |
+| `infra/` | 本机 PostgreSQL Compose、配置与操作说明 |
 
 共享代码仅在出现实际使用方时建立，不提前创建空业务模块。
 

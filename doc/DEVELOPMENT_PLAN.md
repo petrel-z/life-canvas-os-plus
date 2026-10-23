@@ -10,7 +10,7 @@
 
 **依据：** [V1 需求](LIFE_CANVAS_V1_REQUIREMENTS.md)、[交互规范](INTERACTION_SPEC.md)、[核心数据/API](CORE_DATA_API.md)。
 
-更新：2026-10-23。当前已有文档、静态原型、Git、根 workspace 与后端配置/响应/追踪/存活检查；T1 的 S01–S04 已完成，见 [工程骨架计划](ENGINEERING_BOOTSTRAP_PLAN.md)。正式客户端、业务接口及数据库仍待实现；下文未勾选任务的文件与命令仍为实施目标。
+更新：2026-10-23。当前已有文档、静态原型、Git、根 workspace、后端公共能力、PostgreSQL 连接/健康检查和迁移基线；T1 的 S01–S05 已完成，见 [工程骨架计划](ENGINEERING_BOOTSTRAP_PLAN.md)。正式客户端与业务接口仍待实现；下文未勾选任务的文件与命令仍为实施目标。
 
 ## 1. 全局约束
 

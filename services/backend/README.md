@@ -1,6 +1,6 @@
 # Life Canvas 后端
 
-S03 提供 FastAPI 应用工厂、环境配置与校验；S04 已接入统一响应、异常处理、请求追踪、CORS 和存活检查。PostgreSQL 连接与迁移在 S05 接入，业务接口按后续任务实施。
+S03 提供 FastAPI 应用工厂、环境配置与校验；S04 接入统一响应、异常处理、请求追踪、CORS 和存活检查；S05 接入 PostgreSQL 异步连接池、就绪检查与 Alembic 基线迁移。业务接口按后续任务实施。
 
 ## 安装
 
@@ -20,6 +20,8 @@ uv sync --project services/backend --frozen --python 3.12.15
 | --- | --- |
 | `APP_ENV` | `development`（默认）、`test` 或 `production` |
 | `DATABASE_URL` | 必填 PostgreSQL 连接串，须包含主机与数据库名；支持 `postgresql://` 和 `postgresql+psycopg://`，统一使用 psycopg 3 |
+| `MIGRATION_DATABASE_URL` | Alembic 必填，单独校验和读取；API 启动不要求此变量，迁移也不要求 API 配置有效 |
+| `TEST_DATABASE_URL` | 仅真实数据库测试需要，须有 CREATEDB 权限；不会作为 API 或迁移的默认值 |
 | `CORS_ORIGINS` | JSON 数组，如 `["http://localhost:5173"]`；默认空列表，仅接受不带认证、路径、查询或片段的 HTTP(S) origin |
 
 根 `.env` 的位置由源码定位，不随启动工作目录改变。优先级为：显式注入 `Settings` 字段 → 进程环境变量 → 根 `.env` → 字段默认值。读取配置不缓存，缺少必需项或格式错误会阻止启动；不回退到演示配置。当前阶段不要求 Auth、模型或 Worker 凭据。
@@ -34,7 +36,13 @@ pnpm dev:backend
 uv run --frozen --project services/backend uvicorn app.main:create_app --factory --app-dir services/backend --host 127.0.0.1 --port 8000 --no-access-log
 ```
 
-访问 [存活检查](http://127.0.0.1:8000/health/live)、[API 文档](http://127.0.0.1:8000/docs) 或 [OpenAPI](http://127.0.0.1:8000/openapi.json)。GET 存活检查返回统一 JSON，data 为 `{"status":"ok"}`；HEAD 只返回响应头。此阶段尚无业务路由；存活检查不连接数据库，`/health/ready` 仍待 S05 实现。
+访问 [存活检查](http://127.0.0.1:8000/health/live)、[就绪检查](http://127.0.0.1:8000/health/ready)、[API 文档](http://127.0.0.1:8000/docs) 或 [OpenAPI](http://127.0.0.1:8000/openapi.json)。两项健康接口均支持 GET/HEAD：成功 JSON 的 data 为 `{"status":"ok"}`，HEAD 只返回响应头。
+
+`live` 不访问数据库。`ready` 通过 SQLAlchemy async engine/psycopg 3 执行 `SELECT 1`，池等待、连接和探测共享 2 秒超时；数据库不可用返回 HTTP/code 503，data 为 `{"reason":"DATABASE_UNAVAILABLE"}`，保留请求 traceId。调用方取消会继续传播。它仅验证数据库连接，不检查业务表或 Supabase Auth/Storage。
+
+连接池在应用 lifespan 中创建、关闭时释放，创建时不连库；数据库暂时离线不会阻止 API 启动。池最多 5 个常驻连接和 5 个临时连接，启用取连接前的存活探测，数据库恢复后可重连。超时响应不等待驱动的取消握手；取消中的探测按引擎跟踪并在关闭时清理。生成 OpenAPI 不运行 lifespan，也不连接数据库。
+
+先按 [infra/README.md](../../infra/README.md) 配置并启动 PostgreSQL，再在本目录执行 `uv run --frozen alembic upgrade head` 和 `uv run --frozen alembic current`。迁移独立读取根 `.env` 的 `MIGRATION_DATABASE_URL`，不使用运行凭据兜底；URL 直接交给引擎，避免 `%` 编码被 INI 插值。基线 `0000_baseline` 无业务表，API 不自动迁移。S05 本机暂用 bootstrap 角色，T2 再完成运行/迁移权限分离与 RLS。
 
 普通 JSON 使用 code/msg/data/traceId；损坏 JSON 返回 400，字段错误返回 422，未处理异常返回安全的 500。响应头 X-Trace-Id、正文和服务端请求日志使用同一 ID；外部传入的追踪头不被直接采信。CORS 向配置来源开放追踪头、Location 和 Retry-After，支持 REST 方法及认证/幂等请求头。
 
@@ -59,4 +67,4 @@ uv run --frozen --project services/backend ruff format --check services/backend
 uv run --frozen --project services/backend pytest services/backend/tests -q
 ```
 
-测试隔离环境文件和相关进程变量，仅使用合成连接串，不连接数据库。当前共 52 项测试，覆盖配置/工厂、响应契约、错误脱敏、并发追踪、CORS、无体响应、流中断与存活检查；测试故障路由不注册到正式应用。
+配置和协议测试隔离本地运行/迁移凭据。完整测试还使用 `TEST_DATABASE_URL` 创建独立临时 PostgreSQL 数据库，验证迁移升级→回退→再升级、已有数据保留、池恢复和退出释放；缺少测试数据库时明确失败。完整测试 66 项，另含建连/已有连接/池等待的两秒超时、取消、并发存活检查、错误脱敏与 OpenAPI；测试故障路由不注册到正式应用。运行及证据见 [S05 记录](../../doc/validation/T1-database.md)。
